@@ -1,8 +1,13 @@
 const express = require('express');
 const router = express.Router();
+const Author = require('../models/authors');
 
 router.get('/', (req, res) => {
-	res.render('authors/index.ejs');
+	Author.find({}, (err, foundAuthors) => {
+		res.render('authors/index.ejs', {
+			authors: foundAuthors
+		});
+	});	
 });
 
 router.get('/new', (req, res) => {
@@ -11,7 +16,10 @@ router.get('/new', (req, res) => {
 
 router.post('/', (req, res) => {
 	console.log(req.body);
-	res.send('server received request')
+	Author.create(req.body, (err, createdAuthor) => {
+		console.log(createdAuthor, ' this is the created Author')
+		res.redirect('/authors');
+	});
 });
 
 
