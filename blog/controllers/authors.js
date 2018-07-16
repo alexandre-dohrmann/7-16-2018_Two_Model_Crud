@@ -22,6 +22,24 @@ router.get('/:id', (req, res) => {
 	});
 });
 
+router.get('/:id/edit', (req, res) => {
+	Author.findById(req.params.id, (err, foundAuthor) => {
+		res.render('authors/edit.ejs', { 
+			author: foundAuthor
+		});
+	});
+});
+
+router.put('/:id', (req, res) => {
+	Author.findByIdAndUpdate(req.params.id, req.body, {new: true}, (err, updatedAuthor) => {
+		if (err) {
+			res.send(err);
+		} else {
+			res.redirect(`/authors/${updatedAuthor.id}`);
+		}
+	})
+})
+
 router.post('/', (req, res) => {
 	console.log(req.body);
 	Author.create(req.body, (err, createdAuthor) => {
